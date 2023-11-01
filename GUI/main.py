@@ -1,31 +1,37 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-
 from __future__ import absolute_import
 from imgui.integrations.pygame import PygameRenderer
 import OpenGL.GL as gl
 import imgui
 import pygame
 import sys
+import psutil
 
-import hello
+# GUI components imports
+import info_bar as info
+import styles
 
-
+# main window for imgui context
+# using pygame due to out of box OpenGL and Controller support
 def main():
+    # Initialize pygame and imgui
     pygame.init()
     size = 800, 600
 
-    pygame.display.set_mode(size, pygame.DOUBLEBUF | pygame.OPENGL | pygame.RESIZABLE)
+    display = pygame.display.set_mode(size, pygame.DOUBLEBUF | pygame.OPENGL | pygame.RESIZABLE)
 
     imgui.create_context()
     impl = PygameRenderer()
 
     io = imgui.get_io()
     io.display_size = size
+    # configure UI style
+    styles.set_style()
 
-    show_custom_window = True
-
+    # pygame event handler
     while True:
+
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 sys.exit(0)
@@ -33,7 +39,10 @@ def main():
         impl.process_inputs()
 
         imgui.new_frame()
+        cpu = psutil.cpu_percent(interval=0.1)/100
+        battery = psutil.sensors_battery()
 
+        # menu bar for imgui window
         if imgui.begin_main_menu_bar():
             if imgui.begin_menu("File", True):
 
@@ -47,9 +56,8 @@ def main():
                 imgui.end_menu()
             imgui.end_main_menu_bar()
 
-
-        if show_custom_window:
-            hello.hello_world()
+        # display elements to the screen
+        info.drive(cpu, battery)
 
         # note: cannot use screen.fill((1, 1, 1)) because pygame's screen
         #       does not support fill() on OpenGL sufraces
