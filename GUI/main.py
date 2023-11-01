@@ -8,7 +8,7 @@ import pygame
 import sys
 
 # GUI components imports
-import dive_taskbar as drive
+import drive_taskbar as drive
 import styles
 import camera_stream as cam
 import motor_info as motor

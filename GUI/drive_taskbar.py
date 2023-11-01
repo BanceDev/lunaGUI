@@ -36,7 +36,7 @@ def drive_taskbar():
     imgui.same_line(spacing=imgui.get_window_size().x * 0.01)
     battery = psutil.sensors_battery()
     if battery != None:
-        imgui.progress_bar(battery, (imgui.get_window_size().x * 0.125, imgui.get_window_size().y * 0.05), "")
+        imgui.progress_bar(battery.percent/100, (imgui.get_window_size().x * 0.125, imgui.get_window_size().y * 0.05), "")
     else:
         imgui.progress_bar(100, (imgui.get_window_size().x * 0.125, imgui.get_window_size().y * 0.05), "")
     
