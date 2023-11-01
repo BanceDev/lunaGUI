@@ -12,13 +12,15 @@ import drive_taskbar as drive
 import styles
 import camera_stream as cam
 import motor_info as motor
+import test
 
 # main window for imgui context
 # using pygame due to out of box OpenGL and Controller support
 def main():
     # Initialize pygame and imgui
     pygame.init()
-    size = 800, 600
+    pygame.joystick.init()
+    size = 1600, 900
 
     display = pygame.display.set_mode(size, pygame.DOUBLEBUF | pygame.OPENGL | pygame.RESIZABLE)
 
@@ -28,11 +30,21 @@ def main():
 
     io = imgui.get_io()
     io.display_size = size
+   
+    default_font = io.fonts.add_font_from_file_ttf(
+    "GUI/Roboto-Regular.ttf", 24,
+    )
+    impl.refresh_font_texture()
     # configure UI style
     styles.set_style()
 
+    
+    ip_val = "0.0.0.0"
+    port_val = "0"
+
     # pygame event handler
     while True:
+        joysticks = [pygame.joystick.Joystick(x) for x in range(pygame.joystick.get_count())]
 
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -41,6 +53,8 @@ def main():
         impl.process_inputs()
 
         imgui.new_frame()
+
+        imgui.push_font(default_font)
 
         # menu bar for imgui window
         if imgui.begin_main_menu_bar():
@@ -57,9 +71,13 @@ def main():
             imgui.end_main_menu_bar()
 
         # display elements to the screen
-        drive.drive_taskbar()
+        ip_val, port_val = drive.drive_taskbar(ip_val, port_val, joysticks)
         cam.camera_window()
         motor.motor_window()
+
+
+        #make sure this is after all elements are displayed
+        imgui.pop_font()
 
         # note: cannot use screen.fill((1, 1, 1)) because pygame's screen
         #       does not support fill() on OpenGL sufraces

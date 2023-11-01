@@ -3,7 +3,7 @@ from array import array
 import psutil
 
 # create main information bar on the bottom of the driver station
-def drive_taskbar():
+def drive_taskbar(ip_val, port_val, joysticks):
     
     io = imgui.get_io()
     imgui.set_next_window_position(io.display_size.x * 0.5, io.display_size.y, 1, pivot_x = 0.5, pivot_y = 0.5)
@@ -13,8 +13,6 @@ def drive_taskbar():
         flags =  imgui.WINDOW_NO_COLLAPSE |
         imgui.WINDOW_NO_MOVE
     )
-
-    imgui.set_window_font_scale(0.0015 * imgui.get_window_size().x)
     # button controls for selecting drive mode and enable/disable
     imgui.begin_group()
     imgui.button("TeleOperation", imgui.get_window_size().x * 0.2)
@@ -38,6 +36,15 @@ def drive_taskbar():
         imgui.progress_bar(battery.percent/100, (imgui.get_window_size().x * 0.125, imgui.get_window_size().y * 0.05), "")
     else:
         imgui.progress_bar(100, (imgui.get_window_size().x * 0.125, imgui.get_window_size().y * 0.05), "")
+    imgui.text("Comms     ")
+    imgui.same_line(spacing=imgui.get_window_size().x * 0.01)
+    imgui.color_button("Comms Disabled", 1, 0, 0, 1, 0, imgui.get_window_size().x * 0.04, imgui.get_window_size().y * 0.05)
+    imgui.text("Controller")
+    imgui.same_line(spacing=imgui.get_window_size().x * 0.014)
+    if len(joysticks) > 0:
+        imgui.color_button("Joystick Disabled", 0, 1, 0, 1, 0, imgui.get_window_size().x * 0.04, imgui.get_window_size().y * 0.05)
+    else:
+        imgui.color_button("Joystick Disabled", 1, 0, 0, 1, 0, imgui.get_window_size().x * 0.04, imgui.get_window_size().y * 0.05)
     
     imgui.end_group()
 
@@ -55,9 +62,14 @@ def drive_taskbar():
     imgui.same_line(spacing=imgui.get_window_width() * 0.04)
 
     imgui.begin_group()
-    imgui.text("Change Network Values")
-    ip_val = "0.0.0.0"
-    changed_ip, ip_val = imgui.input_text("", ip_val)
+    imgui.text("Network Values")
+    imgui.set_next_item_width(imgui.get_window_width() * 0.2)
+
+    changed_ip, ip_val = imgui.input_text("IP", ip_val)
+    imgui.set_next_item_width(imgui.get_window_width() * 0.2)
+    changed_port, port_val = imgui.input_text("Port", port_val)
     imgui.end_group()
 
     imgui.end()
+
+    return (ip_val, port_val)
