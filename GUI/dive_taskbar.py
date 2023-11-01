@@ -1,6 +1,5 @@
 import imgui
 from array import array
-from random import random
 import psutil
 
 # create main information bar on the bottom of the driver station
@@ -47,7 +46,7 @@ def drive_taskbar():
     # Display for robot battery history and current voltage
     imgui.begin_group()
     imgui.text("Robot Battery")
-    battery_values = array('f', [random() for _ in range(20)])
+    battery_values = array('f', [1 for _ in range(20)])
     imgui.plot_histogram("", battery_values, graph_size=(imgui.get_window_size().x * 0.07, imgui.get_window_size().y * 0.08))
     imgui.same_line(spacing=imgui.get_window_size().x * 0.01)
     imgui.text("0.0V")
