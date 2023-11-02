@@ -6,13 +6,18 @@ import OpenGL.GL as gl
 import imgui
 import pygame
 import sys
+import threading
+from queue import Queue
+
+# Server components
+import Server.server as server
 
 # GUI components imports
-import drive_taskbar as drive
-import styles
-import camera_stream as cam
-import motor_info as motor
-import test
+import GUI.drive_taskbar as drive
+import GUI.styles as styles
+import GUI.camera_stream as cam
+import GUI.motor_info as motor
+
 
 # main window for imgui context
 # using pygame due to out of box OpenGL and Controller support
@@ -21,6 +26,14 @@ def main():
     pygame.init()
     pygame.joystick.init()
     size = 1600, 900
+
+    # create queue for server packets
+    server_queue = Queue()
+
+    # Start up the server thread
+    server_thread = threading.Thread(target=server.run_server, args=(server_queue, ), daemon=True)
+    server_thread.start()
+    
 
     display = pygame.display.set_mode(size, pygame.DOUBLEBUF | pygame.OPENGL | pygame.RESIZABLE)
 
@@ -44,6 +57,10 @@ def main():
 
     # pygame event handler
     while True:
+        # pull information from the server queue
+        server_data = server_queue.get()
+
+
         joysticks = [pygame.joystick.Joystick(x) for x in range(pygame.joystick.get_count())]
 
         for event in pygame.event.get():
@@ -53,6 +70,7 @@ def main():
         impl.process_inputs()
 
         imgui.new_frame()
+
 
         imgui.push_font(default_font)
 
@@ -71,7 +89,7 @@ def main():
             imgui.end_main_menu_bar()
 
         # display elements to the screen
-        ip_val, port_val = drive.drive_taskbar(ip_val, port_val, joysticks)
+        drive.drive_taskbar(joysticks, 10)
         cam.camera_window()
         motor.motor_window()
 

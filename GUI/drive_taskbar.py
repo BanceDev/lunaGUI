@@ -3,7 +3,7 @@ from array import array
 import psutil
 
 # create main information bar on the bottom of the driver station
-def drive_taskbar(ip_val, port_val, joysticks):
+def drive_taskbar(joysticks, robot_battery):
     
     io = imgui.get_io()
     imgui.set_next_window_position(io.display_size.x * 0.5, io.display_size.y, 1, pivot_x = 0.5, pivot_y = 0.5)
@@ -53,23 +53,11 @@ def drive_taskbar(ip_val, port_val, joysticks):
     # Display for robot battery history and current voltage
     imgui.begin_group()
     imgui.text("Robot Battery")
-    battery_values = array('f', [1 for _ in range(20)])
-    imgui.plot_histogram("", battery_values, graph_size=(imgui.get_window_size().x * 0.07, imgui.get_window_size().y * 0.08))
+    imgui.progress_bar(float(robot_battery)/12, (imgui.get_window_size().x * 0.05, imgui.get_window_size().y * 0.07), "")
     imgui.same_line(spacing=imgui.get_window_size().x * 0.01)
-    imgui.text("0.0V")
+    imgui.text(f"{robot_battery}V")
     imgui.end_group()
 
     imgui.same_line(spacing=imgui.get_window_width() * 0.04)
 
-    imgui.begin_group()
-    imgui.text("Network Values")
-    imgui.set_next_item_width(imgui.get_window_width() * 0.2)
-
-    changed_ip, ip_val = imgui.input_text("IP", ip_val)
-    imgui.set_next_item_width(imgui.get_window_width() * 0.2)
-    changed_port, port_val = imgui.input_text("Port", port_val)
-    imgui.end_group()
-
     imgui.end()
-
-    return (ip_val, port_val)
