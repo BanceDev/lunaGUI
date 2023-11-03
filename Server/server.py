@@ -1,13 +1,13 @@
-#
-#   Hello World server in Python
-#   Binds REP socket to tcp://*:5555
-#   Expects b"Hello" from client, replies with b"World"
-#
-
 import time
 import zmq
 from queue import Queue
 
+#
+# Creates a server context and socket using TCP.
+# Then runs server and puts all incoming messages into a queue
+#
+# :param out_q: the queue to put the incoming messages into
+#
 def run_server(out_q):
     context = zmq.Context()
     socket = context.socket(zmq.REP)

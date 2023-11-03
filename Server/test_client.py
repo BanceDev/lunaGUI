@@ -1,9 +1,3 @@
-#
-#   Hello World client in Python
-#   Connects REQ socket to tcp://localhost:5555
-#   Sends "Hello" to server, expects "World" back
-#
-
 import zmq
 import packet_gen
 from random import randrange

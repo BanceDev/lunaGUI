@@ -2,7 +2,12 @@ import imgui
 from array import array
 import psutil
 
-# create main information bar on the bottom of the driver station
+#
+# Creates the UI for the bottom taskbar for the driver station
+#
+# :param joysticks: a list object of joysticks given from a pygame instance
+# :param robot_battery: a string containing the voltage of the robot battery
+#
 def drive_taskbar(joysticks, robot_battery):
     
     io = imgui.get_io()
