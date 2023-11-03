@@ -52,13 +52,15 @@ def main():
     styles.set_style()
 
     
-    ip_val = "0.0.0.0"
-    port_val = "0"
+    robot_battery = "0.0"
 
     # pygame event handler
     while True:
         # pull information from the server queue
-        server_data = server_queue.get()
+        if not server_queue.empty():
+            server_data = server_queue.get()
+            robot_battery = server_data.splitlines()[1]
+            robot_battery = robot_battery.split("BV:")[1]
 
 
         joysticks = [pygame.joystick.Joystick(x) for x in range(pygame.joystick.get_count())]
@@ -89,7 +91,7 @@ def main():
             imgui.end_main_menu_bar()
 
         # display elements to the screen
-        drive.drive_taskbar(joysticks, 10)
+        drive.drive_taskbar(joysticks, robot_battery)
         cam.camera_window()
         motor.motor_window()
 

@@ -21,7 +21,7 @@ socket.connect(f"tcp://localhost:{port}")
 
 #  Do 10 requests, waiting each time for a response
 for request in range(10):
-    packet = packet_gen.client_packet(packet_id, randrange(0, 12))
+    packet = packet_gen.client_packet(packet_id, float(randrange(0, 12)))
     packet_id += 1
     socket.send_string(packet)
 

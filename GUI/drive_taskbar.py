@@ -53,7 +53,7 @@ def drive_taskbar(joysticks, robot_battery):
     # Display for robot battery history and current voltage
     imgui.begin_group()
     imgui.text("Robot Battery")
-    imgui.progress_bar(float(robot_battery)/12, (imgui.get_window_size().x * 0.05, imgui.get_window_size().y * 0.07), "")
+    imgui.progress_bar(float(robot_battery)/12.0, (imgui.get_window_size().x * 0.05, imgui.get_window_size().y * 0.07), "")
     imgui.same_line(spacing=imgui.get_window_size().x * 0.01)
     imgui.text(f"{robot_battery}V")
     imgui.end_group()
