@@ -1,5 +1,3 @@
-#!/usr/bin/env python
-# -*- coding: utf-8 -*-
 from __future__ import absolute_import
 from imgui.integrations.pygame import PygameRenderer
 import OpenGL.GL as gl

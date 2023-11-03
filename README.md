@@ -23,3 +23,9 @@ pip install pygame
 ```
 pip install psutil
 ```
+
+### ZeroMQ
+
+```
+pip install pyzmq
+```
