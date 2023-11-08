@@ -1,6 +1,8 @@
 import imgui
 from array import array
 import psutil
+from Server import packet_gen as srv_gen
+from queue import Queue
 
 #
 # Creates the UI for the bottom taskbar for the driver station
@@ -9,7 +11,7 @@ import psutil
 # :param robot_battery: a string containing the voltage of the robot battery
 # :param connected: a boolean to display the connection status of the server
 #
-def drive_taskbar(joysticks, robot_battery, connected):
+def drive_taskbar(joysticks, robot_battery, connected, server_queue:Queue):
     
     io = imgui.get_io()
     imgui.set_next_window_position(io.display_size.x * 0.5, io.display_size.y, 1, pivot_x = 0.5, pivot_y = 0.5)
@@ -22,14 +24,14 @@ def drive_taskbar(joysticks, robot_battery, connected):
     # button controls for selecting drive mode and enable/disable
     imgui.begin_group()
     if imgui.button("TeleOperation", imgui.get_window_size().x * 0.2):
-        print("teleop callback")
+        server_queue.put(srv_gen.server_packet(operation_mode=0))
     if imgui.button("Autonomous", imgui.get_window_size().x * 0.2):
-        print("auto callback")
+        server_queue.put(srv_gen.server_packet(operation_mode=1))
     if imgui.button("Enable", imgui.get_window_size().x * 0.09, imgui.get_window_size().y * 0.15):
-        print("enable callback")
+        server_queue.put(srv_gen.server_packet(enable=True))
     imgui.same_line(spacing=imgui.get_window_size().x * 0.02)
     if imgui.button("Disable", imgui.get_window_size().x * 0.09, imgui.get_window_size().y * 0.15):
-        print("disable callback")
+        server_queue.put(srv_gen.server_packet(enable=False))
     imgui.end_group()
 
     imgui.same_line(spacing=imgui.get_window_width() * 0.04)

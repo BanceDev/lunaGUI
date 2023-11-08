@@ -105,7 +105,7 @@ def main():
             imgui.end_main_menu_bar()
 
         # display elements to the screen
-        drive.drive_taskbar(joysticks, robot_battery, robot_connected)
+        drive.drive_taskbar(joysticks, robot_battery, robot_connected, server_write_queue)
         cam.camera_window()
         motor.motor_window()
 

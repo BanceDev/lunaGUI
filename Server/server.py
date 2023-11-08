@@ -38,7 +38,6 @@ def run_server(out_q:Queue, in_q:Queue):
         time.sleep(1)
 
         if not in_q.empty():
-            print("smth in queue")
             socket.send_string(in_q.get())
         else:
             socket.send_string(srv_gen.server_packet())
